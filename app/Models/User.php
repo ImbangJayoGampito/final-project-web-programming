@@ -45,4 +45,21 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    /**
+     * Get the settings associated with the user.
+     */
+    public function settings()
+    {
+        return $this->hasOne(Settings::class);
+    }
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            $user->settings()->create([
+                'dark_mode' => false,
+                'language' => 'en',
+                'is_admin' => false,
+            ]);
+        });
+    }
 }

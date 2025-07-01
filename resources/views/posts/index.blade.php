@@ -3,17 +3,19 @@
 @section('content')
     <div class="container py-4">
         @include('layouts.alerts')
-        <h2 class="mb-4">
-            {{ request('mine') ? 'Your Posts' : 'All Posts' }}
-        </h2>
+        @auth
+            <h2 class="mb-4">
+                {{ request('mine') ? 'Your Posts' : 'All Posts' }}
+            </h2>
 
-        <div class="mb-4">
-            <a href="{{ request('mine') ? route('posts.index') : route('posts.index', ['mine' => 1]) }}"
-                class="btn btn-outline-secondary ">
-                {{ request('mine') ? 'Show All Posts' : 'Show Only My Posts' }}
-            </a>
-            <a href="{{ route('posts.create') }}" class="btn btn-outline-primary">Create Post</a>
-        </div>
+            <div class="mb-4">
+                <a href="{{ request('mine') ? route('posts.index') : route('posts.index', ['mine' => 1]) }}"
+                    class="btn btn-outline-secondary ">
+                    {{ request('mine') ? 'Show All Posts' : 'Show Only My Posts' }}
+                </a>
+                <a href="{{ route('posts.create') }}" class="btn btn-outline-primary">Create Post</a>
+            </div>
+        @endauth
 
         @forelse ($posts as $post)
             <div class="mb-4 p-3 border rounded shadow bg-white">
@@ -22,11 +24,13 @@
                     {{ Str::limit(strip_tags(html_entity_decode($post->content)), 200) }}
                 </p>
                 <small class="d-block text-secondary mb-2">
+                    Posted by
                     @if (Auth::id() === $post->user_id)
-                        Posted by you
+                        <a href="{{ route('user.show', Auth::id()) }}">you</a>
                     @else
-                        Posted by {{ $post->user->name }}
+                        <a href="{{ route('user.show', $post->user_id) }}">{{ $post->user->name }}</a>
                     @endif
+
                     &nbsp;&nbsp;|&nbsp;&nbsp;{{ $post->category->name ?? 'Uncategorized' }}
                     &nbsp;&nbsp;|&nbsp;&nbsp;
                     Posted at {{ $post->created_at->format('M d, Y') }}

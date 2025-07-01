@@ -82,7 +82,6 @@
             <button type="submit" class="btn btn-primary">Publish Post</button>
             <a href="{{ route('posts.index') }}" class="btn btn-outline-secondary ms-2">Cancel</a>
         </form>
-        <button id="quill-check">Check Quill</button>
     </div>
 @endsection
 

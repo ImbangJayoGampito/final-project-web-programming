@@ -37,9 +37,10 @@
                     <div class="invalid-feedback d-block">{{ $message }}</div>
                 @enderror
             </div>
-            <a href="{{ route('home') }}" class="btn btn-outline-secondary ms-2">Cancel</a>
+
             {{-- Submit --}}
             <button type="submit" class="btn btn-primary">Save Settings</button>
+            <a href="{{ route('home') }}" class="btn btn-outline-secondary ms-2">Cancel</a>
         </form>
     </div>
 @endsection

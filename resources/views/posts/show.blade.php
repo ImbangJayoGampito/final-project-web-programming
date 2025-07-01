@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
     <div class="container py-4 border border-dark rounded">
         <h2 class="mb-3 text-break">{{ $post->title }}</h2>
 
@@ -9,9 +8,9 @@
             <small class="d-block">
                 Posted by
                 @if (Auth::id() === $post->user_id)
-                    you
+                    <a href="{{ route('user.show', Auth::id()) }}">you</a>
                 @else
-                    {{ $post->user->name }}
+                    <a href="{{ route('user.show', $post->user_id) }}">{{ $post->user->name }}</a>
                 @endif
                 &bull; {{ $post->created_at->format('M d, Y') }}
             </small>
@@ -23,14 +22,8 @@
             </span>
         </div>
 
-        <div class="mb-4 text-break">
-            <div class="ql-editor m-0 p-0">
-                {!! $post->content !!}
-            </div>
-
-
-
-        </div>
+        <!-- Quill content container -->
+        <div id="quill-container" class="mb-4 text-break"></div>
 
         @if ($post->tags->count())
             <div class="mb-4">
@@ -54,9 +47,12 @@
 @push('styles')
     <link href="{{ asset('quill/quill.snow.css') }}" rel="stylesheet">
     <style>
-        /* Hide the editor */
-        .quill {
-            display: none;
+        .ql-syntax {
+            background-color: #f8f9fa;
+            padding: 0.75rem;
+            border-radius: 5px;
+            font-family: monospace;
+            overflow-x: auto;
         }
     </style>
 @endpush
@@ -66,14 +62,15 @@
     <script src="{{ asset('quill/quill_editor.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const content = @json($post->content);
-
             const quill = initQuillEditor('#quill-container', {
                 readOnly: true,
                 modules: {
                     toolbar: false
                 }
             });
+
+            const content = @json($post->content);
+            quill.root.innerHTML = content;
         });
     </script>
 @endpush

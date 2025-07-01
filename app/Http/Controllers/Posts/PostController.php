@@ -20,9 +20,7 @@ class PostController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        if (!$user) {
-            return redirect()->route('login')->with('error', 'You must be logged in to view posts.');
-        }
+
         $is_mine = $request->query('mine', false);
         if ($is_mine) {
             $posts = Post::with('category', 'user')
@@ -42,7 +40,7 @@ class PostController extends Controller
     {
         $user = Auth::user();
         if (!$user) {
-            return redirect()->route('login')->with('error', 'You must be logged in to view posts.');
+            return redirect()->route('login')->with('error', 'You must be logged in to create posts.');
         }
         $categories = Category::all();
         if ($categories->isEmpty()) {
@@ -103,7 +101,7 @@ class PostController extends Controller
     {
         $user = Auth::user();
         if (!$user) {
-            return redirect()->route('login')->with('error', 'You must be logged in to view posts.');
+            return redirect()->route('login')->with('error', 'You must be logged in to edit posts.');
         }
         if ((int)$user->id !== (int)Post::find($id)->user_id) {
             return redirect()->route('posts.index')->with('error', 'You do not have permission to edit this post.');
@@ -164,7 +162,7 @@ class PostController extends Controller
     {
         $user = Auth::user();
         if (!$user) {
-            return redirect()->route('login')->with('error', 'You must be logged in to view posts.');
+            return redirect()->route('login')->with('error', 'You must be logged in to delete posts.');
         }
         if ((int)$user->id !== (int)Post::find($id)->user_id) {
             return redirect()->route('posts.index')->with('error', 'You do not have permission to delete this post.');
